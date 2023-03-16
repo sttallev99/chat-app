@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { doc, setDoc } from "firebase/firestore"; 
@@ -89,7 +89,7 @@ const Register = () => {
                 <button>Sign up</button> 
                 {err && <span>Something went wrong</span>}             
             </form>
-            <p>Have account? Login</p>
+            <p>Have account? <Link to='/login'>Login</Link></p>
         </div>
     </div>
   )
