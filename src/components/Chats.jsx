@@ -1,38 +1,41 @@
-import React from 'react'
+import { doc, onSnapshot } from 'firebase/firestore';
+import React, { useContext, useEffect, useState } from 'react'
+import { AuthConntext } from '../context/AuthContext';
+import { db } from '../firebase';
 
 import profilePicture from '../img/profilePicture.jpg'
 
 const Chats = () => {
+
+  const [chats, setChats] = useState([]);
+
+  const {currentUser} = useContext(AuthConntext);
+
+  useEffect(() => {
+    const getChats = () => {
+      const unsub = onSnapshot(doc(db, "userChats", currentUser.uid), (doc) => {
+        setChats(doc.data());
+
+        return () => {
+          unsub();
+        }
+      });
+    }
+    console.log(currentUser.uid)
+    currentUser.uid && getChats();
+  }, [currentUser.uid]);
+
   return (
     <div className='chats'>
-      <div className="userChat">
-        <img src={profilePicture} alt="" />
-        <div className="userChatInfo">
-          <span>George</span>
-          <p>Hello</p>
+        {Object.entries(chats)?.map(chat => (
+          <div className="userChat" key={chat[0]}>
+          <img src={chat[1].userInfo.photoURL} alt="" />
+          <div className="userChatInfo">
+            <span>{chat[1].userInfo.displayName}</span>
+            <p>{chat[1].userInfo.lastMessage?.text}</p>
+          </div>
         </div>
-      </div>
-      <div className="userChat">
-        <img src={profilePicture} alt="" />
-        <div className="userChatInfo">
-          <span>George</span>
-          <p>Hello</p>
-        </div>
-      </div>
-      <div className="userChat">
-        <img src={profilePicture} alt="" />
-        <div className="userChatInfo">
-          <span>George</span>
-          <p>Hello</p>
-        </div>
-      </div>
-      <div className="userChat">
-        <img src={profilePicture} alt="" />
-        <div className="userChatInfo">
-          <span>George</span>
-          <p>Hello</p>
-        </div>
-      </div>
+        ))}
     </div>
   )
 }
