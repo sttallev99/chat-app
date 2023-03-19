@@ -1,13 +1,16 @@
-import React, { useState } from 'react'
-import { collection, query, where, getDocs } from "firebase/firestore";
+import React, { useContext, useState } from 'react'
+import { collection, query, where, getDocs, setDoc, doc, serverTimestamp, updateDoc, getDoc } from "firebase/firestore";
 import { db } from '../firebase'
 
 import profilePicture from '../img/profilePicture.jpg'
+import { AuthConntext } from '../context/AuthContext';
 
 const Search = () => {
   const [username, setUsername] = useState('');
   const [user, setUser] = useState(null);
   const [err, setErr] = useState(false);
+
+  const {currentUser} = useContext(AuthConntext);
 
   const handleSearch = async() => {
     const q = query(collection(db, 'users'), where('displayName', '==', username));
@@ -27,8 +30,42 @@ const Search = () => {
     e.code === 'Enter' && handleSearch();
   }
 
-  const handleClick = (e) => {
+  const handleSelect = async (e) => {
+    //check whether the group(chats in firestore) exist, if not create
+    console.log(user);
+    console.log(currentUser)
+    const combinedId = currentUser.uid > user.uid ? currentUser.uid + user.uid : user.uid + currentUser.uid;
+    console.log(combinedId)
     
+    try {
+      const response  = await getDoc(doc(db, "chats", combinedId));
+
+      if(!response.exists()) {
+        //create chat is chats collection
+        await setDoc(doc(db,"chats", combinedId), { messages: [] });
+
+        //create user chats
+        await updateDoc(doc(db, "userChats", currentUser.uid), {
+          [combinedId+".userInfo"]: {
+            uid: currentUser.uid,
+            displayName: currentUser.displayName,
+            photoURL: currentUser.photoURL
+          },
+          [combinedId+".date"]: serverTimestamp()
+        });
+        await updateDoc(doc(db, "userChats", currentUser.uid), {
+          [combinedId+".userInfo"]: {
+            uid: user.uid,
+            displayName: user.displayName,
+            photoURL: user.photoURL
+          },
+          [combinedId+".date"]: serverTimestamp()
+        })
+      }
+    }catch(err) {
+
+    }
+    //create user chats
   }
 
   return (
