@@ -6,11 +6,11 @@ import profilePicture from '../img/profilePicture.jpg'
 import { auth } from '../firebase'
 
 const Navbar = () => {
-  const  {currentUser} = useContext(AuthConntext)
-  
+  const { currentUser } = useContext(AuthConntext)
+
   return (
-    <div className='navbar'>
-      <span className='logo'>Uni chat</span>
+    <div className="navbar">
+      <span className="logo">Uni chat</span>
       <div className="user">
         <img src={currentUser.photoURL} alt="" />
         <span>{currentUser.displayName}</span>
