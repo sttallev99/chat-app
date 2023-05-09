@@ -1,15 +1,16 @@
-import React from 'react'
+import React, { useState } from 'react'
 
-import Navbar from '../components/Navbar';
-import Search from '../components/Search';
-import Chats from '../components/Chats';
+import Navbar from '../components/Navbar'
+import Search from '../components/Search'
+import Chats from '../components/Chats'
 
 const Sidebar = () => {
+  const [focus, setFocus] = useState(false)
   return (
-    <div className='sidebar'>
-        <Navbar />
-        <Search />
-        <Chats />
+    <div data-focus={focus} className="sidebar">
+      <Navbar />
+      <Search {...{ focus, setFocus }} />
+      <Chats />
     </div>
   )
 }

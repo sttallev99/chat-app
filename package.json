@@ -2,6 +2,16 @@
   "name": "chat-app",
   "version": "0.1.0",
   "private": true,
+  "contributors": [
+    {
+      "name": "Georgi Stalev",
+      "email": "stu1801681088@uni-plovdiv.bg"
+    },
+    {
+      "name": "Vasil Kostadinov",
+      "email": "stu1901681053@uni-plovdiv.bg"
+    }
+  ],
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
